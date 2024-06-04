@@ -47,3 +47,8 @@
 1. 상위 컴포넌트에서 현재 컴포넌트를 더 이상 화면에 표시하지 않음
 2. `componentWillUnmount()` 호출
 > 컴포넌트 생명주기에서 기억해야할 부분: 컴포넌트는 계속 존재하지 않고 생성되고 업데이터되다가 사라진다.
+
+# React Developer Tool 설치
+- React Developer Tool을 설치하면 개발자 도구에서 `Component`와 `Profiler`라는 새로운 탭 생성
+    - `Component`: 현재 화면에 존재하는 컴포넌트를 트리형태로 보여줌
+    - `Profiler`: 컴포넌트들이 렌더링되는 과정을 기록하여 각 단계별로 살펴볼수 있음
