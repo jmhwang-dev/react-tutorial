@@ -91,22 +91,22 @@ function Counter(props) {
     const [isOnline, setIsOnline] = useState(null);
 
     function handleStatusChange(status) {
-        setIsOnline(status.isOnLine);
+        setIsOnline(status.isOnline);
     }
 
-    // useEffect() 는 여러 개 사용할 수 었음
+    // useEffect()는 여러 개 사용할 수 있음
     useEffect(() => {
-        document.title = `총 ${count}번 클릭했습니다.`;
-    });
+        document.title = `총 ${props.count}번 클릭했습니다.`;
+    }, [props.count]); // 의존성 배열 추가
 
     useEffect(() => {
         ServerAPI.subscribeUserStatus(props.user.id, handleStatusChange);
 
-        // useEffect()에서 리턴하는 함수는 컴포넌트가 마운트 해제될 때 호출됨: 
+        // useEffect()에서 리턴하는 함수는 컴포넌트가 마운트 해제될 때 호출됨
         return () => {
             ServerAPI.unsubscribeUserStatus(props.user.id, handleStatusChange);
-        }
-    })
+        };
+    }, [props.user.id]); // 의존성 배열 추가
 
     if (isOnline === null) {
         return '대기중...';
@@ -177,22 +177,23 @@ function TextInputWithFocusButton(props) {
 
     const onButtonClick = () => {
         // current는 마운트된 input element를 가리킴
-        inputElem.current.focus()
+        inputElem.current.focus();
     };
 
     return (
         <>
             <input ref={inputElem} type="text" />
-            <button onClick={onButtonClick}>Focus the input</fbutton>
+            <button onClick={onButtonClick}>Focus the input</button>
         </>
-    )
+    );
 }
 ```
 
 # 훅의 규칙
 ## 1. 훅은 무조건 최상위 레벨에서만 호출해야한다.
-    - 반복문이나 조건문 또는 중첩된 함수들 안에서 훅으 호출하면 안된다.
+- 반복문이나 조건문 또는 중첩된 함수들 안에서 훅으 호출하면 안된다.
 - 훅은 컴포넌트가 렌더링될 때마다 매번 같은 순서로 호출되어야한다.
+
     ```jsx
     // 예시: if 문으로 인해 호출되지 않아 훅이 달라지므로 잘못된 코드
     function MyComponent(props) {
@@ -209,3 +210,73 @@ function TextInputWithFocusButton(props) {
 ## 2. 리액트 함수 컴포넌트에서만 훅을 호출해야한다.
 - 훅이 자바스크립트로 작성되었지만 자바스크립트 함수에서 훅을 호출하면 안된다.
 - 훅은 리액트 함수 컴포넌트에서 호출하거나 직접 만든 커스텀 훅에서만 호출할 수 있다.
+
+# Custom hook
+- 여러 컴포넌트에서 반복적으로 사용되는 로직을 훅으로 만들어 재사용하기 위함
+- 이름이 `use`로 시작하고 내부에서 다른 훅을 호출하는 하나의 자바스크립트 함수
+> 여러 개의 컴포넌트에서 하나의 커스텀 훅을 사용할 때에 컴포넌트 내부에 있는 모든 `state`와 `effect`는 공유하지 않는다.
+## 커스텀 훅 적용 전 예시
+```jsx
+import React, { useState, useEffect } from "react";
+
+// 유저가 online이면 이름 색상을 변경하는 컴포넌트
+function UserListItem(props) {
+    const [isOnline, setIsOnline] = useState(null);
+
+    useEffect(() => {
+        function handleStatusChange(status) {
+            setIsOnline(status.isOnline);
+        }
+
+        ServerAPI.subscribeUserStatus(props.user.id, handleStatusChange);
+        return () => {
+            ServerAPI.unsubscribeUserStatus(props.user.id, handleStatusChange);
+        };
+    }, [props.user.id]); // 의존성 배열에 props.user.id 추가
+
+    return (
+        <li style={{ color: isOnline ? 'green' : 'black' }}>{props.user.name}</li>
+    );
+}
+```
+## 커스텀 훅 추출 후 적용
+```jsx
+import { useState, useEffect } from "react";
+
+// userStatus를 변경하는 함수를 커스텀 훅으로 구성
+function useUserStatus(userId) {
+    const [isOnline, setIsOnline] = useState(null);
+
+    useEffect(() => {
+        function handleStatusChange(status) {
+            setIsOnline(status.isOnline);
+        }
+
+        ServerAPI.subscribeUserStatus(userId, handleStatusChange);
+        return () => {
+            ServerAPI.unsubscribeUserStatus(userId, handleStatusChange);
+        };
+    }, [userId]); // userId가 변경될 때마다 useEffect 재실행
+
+    return isOnline;
+}
+```
+```jsx
+function UserStatus(props) {
+    const isOnline = useUserStatus(props.user.id);
+
+    if (isOnline === null) {
+        return '대기중...';
+    }
+    return isOnline ? '온라인' : '오프라인';
+}
+```
+```jsx
+function UserListItem(props) {
+    return (
+        <li style={{ color: props.user.isOnline ? 'green' : 'black' }}>
+            <UserStatus user={props.user} />
+        </li>
+    );
+}
+```
