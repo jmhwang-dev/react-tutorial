@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 class ConfirmButton extends React.Component {
     constructor(props) {
         super(props);
