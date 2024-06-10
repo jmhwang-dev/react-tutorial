@@ -15,7 +15,7 @@ function tryConvert(temperature, convert) {
         return '';
     }
     const output = convert(input);
-    const rounded = Math.rount(output * 1000) / 1000;
+    const rounded = Math.round(output * 1000) / 1000;
     return rounded.toString();
 }
 
@@ -41,8 +41,8 @@ function Calculator(props) {
         setScale('f');
     }
 
-    const celsius = scale === 'c' ? tryConvert(temperature, toCelsius) : temperature;
-    const fahrenheit = scale === 'f' ? tryConvert(temperature, toFahrenheit) : temperature;
+    const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+    const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
 
     return (
         <div>
@@ -56,7 +56,7 @@ function Calculator(props) {
                 temperature={fahrenheit}
                 onTemperatureChange={handleFahrenheitChange}
             />
-            <BoilingVerdict celsius={props.temperature} />
+            <BoilingVerdict celsius={parseFloat(celsius)} />
         </div>
     )
 }
