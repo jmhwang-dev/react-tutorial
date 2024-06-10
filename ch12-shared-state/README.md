@@ -141,7 +141,7 @@ function TemperatureInput(props) {
     return (
         <fieldset>
             <legend>온도를 입력해주세요(단위: {scaleNames[props.scale]})</legend>
-            <input value={props.temperature} onChnage={handleChange} />
+            <input value={props.temperature} onChange={handleChange} />
         </fieldset>
     )
 }
@@ -161,8 +161,8 @@ function Calculator(props) {
         setScale('f');
     }
 
-    const celsius = scale === 'c' ? tryConvert(temperature, toCelsius) ; temperature;
-    const fahrenheit = scale === 'f' ? tryConvert(temperature, toFahrenheit) ; temperature;
+    const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+    const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
 
     return (
         <div>
@@ -173,10 +173,10 @@ function Calculator(props) {
             />
             <TemperatureInput
                 scale="f"
-                temperature={celsius}
+                temperature={fahrenheit}
                 onTemperatureChange={handleFahrenheitChange}
             />
-            <BoilingVerdict celsius={parseFloat(temperature)} />
+            <BoilingVerdict celsius={parseFloat(celsius)} />
         </div>
     )
 }
