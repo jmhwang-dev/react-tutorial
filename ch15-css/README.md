@@ -307,3 +307,133 @@ div {
         border: 2px solid #ffcc00;
     }
     ```
+
+# styled-components
+- `styled-components`는 CSS 문법을 그대로 사용하면서 결괌루을 스타일링된 컴포넌트 형태로 만들어주는 오픈소스 라이브러리
+```bash
+# npm을 사용하는 경우
+npm install --save styled-components
+
+# yarn을 사용하는 경우
+yarn add styled-components
+```
+
+```jsx
+import React from "react"
+import sytled from 'styled-components'
+
+const Wrapper = styled.div`
+    padding: 1em;
+    background: grey;
+`;
+
+const Title = styled.h1`
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+`;
+
+function MainPage(props) {
+    return (
+        <Wrapper>
+            <Title>
+                hello world!
+            </Title>
+        </Wrapper>
+    )
+}
+```
+
+## 기본 사용법
+### 리터럴
+- `literal`: 소스코드의 고정된 값
+    ```js
+    // 여기서 리터럴은 'Hello'. 소스코드 상에서 고정된 값
+    const myStr = "Hello";
+    ```
+
+- `constant`: 한 번 선언되면 변하지 않는 수
+    
+    ```js
+    // 한번 선언 후에는 변경할 수 없다.
+    const myStr = "Hello";
+    ```
+
+### Template literal
+- 리터럴을 템플릿 형태로 사용하는 자바스크립트 문법
+- backtick(`)을 사용하여 문자열을 작성하고 그 안에 대체 가능한 expression을 넣는 방법
+- `untagged template literal`과 `tagged tmeplate literal`로 나뉜다.
+
+#### 1. untagged template literal
+- 문자열을 여러 줄에 걸쳐서 작성하거나 formatting 하기 위해서 사용
+```js
+`string text ${expression} string text`
+```
+
+#### 2. tagged template literal
+
+```js
+const name = "jm";
+const region = "Seoul";
+
+function myTagFunction(strings, nameExp, regionExp) {
+    let str0 = strings[0];
+    let str1 = strings[1];
+    let str2 = strings[2];
+
+    return `${str0}${nameExp}${str1}${regionExp}${str2}`;
+}
+
+// 템플릿 리터럴은 템플릿 표현식( ${} )을 기준으로 string을 배열로 구성한다.
+const output = myTagFunction`제 이름은 ${name}이고, 사는 곳은 ${region}입니다.`;
+console.log(output);
+```
+
+## styled-components의 props 사용하기
+- `styled-components`를 사용하면 리액트 컴포넌트가 생성된다.
+```jsx
+import styled from "styled-components";
+
+const Button = styled.button`
+    color: ${props => props.dark ? "white" : "dark"};
+    background: ${props => props.dark ? "black" : "white"};
+    border: 1px solid black;
+`;
+
+function Sample() {
+    return (
+        <div>
+            {/* Button: styled-components를 사용해서 만들어진 컴포넌트 */}
+            <Button>Normal<Button>
+            <Button dark>Dark<Button>
+        </div>
+    );
+}
+
+export default Sample;
+```
+
+## styled-components의 스타일 확장하기
+```jsx
+import styled from "styled-components";
+
+const Button = styled.button`
+    color: grey;
+    border: 2px solid palveioletred;
+`;
+
+// Button에 style이 추가된 컴포넌트
+// 다른 컴포넌트의 스타일을 확장하여 사용하는 부분
+const RoundedButton = styled(Button)`
+    border-radius: 16px;
+`;
+
+function Sample {
+    return (
+        <div>
+            <Button>Normal</Button>
+            <RoundedButton dark>Dark</RoundedButton>
+        </div>
+    )
+}
+```
