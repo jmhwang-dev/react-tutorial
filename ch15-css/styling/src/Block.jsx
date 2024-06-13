@@ -25,7 +25,7 @@ const Wrapper = styled.div`
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    background-color: lightgrey;
+    background-color: lightgray;
 `;
 
 const Block = styled.div`
