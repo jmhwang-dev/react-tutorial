@@ -51,10 +51,10 @@ const CommentLabel = styled.p`
 `
 function PostViewPage(props) {
     const navigate = useNavigate();
-    const {postId} = useParams();
+    const { postId } = useParams();
 
     const post = data.find((item) => {
-        return item.id === postId;
+        return item.id == postId;
     });
 
     const [comment, setComment] = useState("");

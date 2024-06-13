@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom"
-import { Button } from "../ui/Button"
-import { PostList} from "../list/PostList"
-import { data } from "../../data.json"
+import { useNavigate } from "react-router-dom";
+import PostList from "../list/PostList";
+import data from "../../data.json";
+import Button from "../ui/Button";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -24,15 +24,15 @@ const Container = styled.div`
     }
 `;
 
-function MainPage(props) {
-    const {} = props;
+function MainPage() {
 
     const navigate = useNavigate();
-
     return (
         <Wrapper>
-            <Button title="write post" onClick={()=>{navigate("/post-write");}}  />
-            <PostList posts={data} onClickItem={(item) => {navigate(`/post/${item.id}`)}} />
+            <Container>
+                <Button title="write post" onClick={()=>{navigate("/post-write");}} />
+                <PostList posts={data} onClickItem={(item) => {navigate(`/post/${item.id}`)}} />
+            </Container>
         </Wrapper>
     )
 }
