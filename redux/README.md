@@ -125,3 +125,30 @@ dispatch({type: 'setToday', today: new Date()})
     - 앱 수준 상태의 일부 속성 값을 변경하려면 `Action`을 만들어야한다.
     - `Action`은 반드시 `dispatch` 함수로 `reducer`에 전달해야한다.
     - `reducer`에 전달되는 `state`, `action`을 통해 새로운 `state` 객체를 만들어 `redux store`에 저장한다.
+
+## 4. `useReducer` 훅 사용하기
+- `redux`의 `reducer`와 같은 기능
+- `Provider`와 같은 컨텍스트 없이 사용
+> `useReducer` 훅의 상태는 다른 훅 함수들처럼 `useReducer` 훅을 호출한 컴포넌트 안에서만 유효하다.<br>
+> 반면, `redux`의 상태는 앱의 모든 컴포넌트에서 접근할 수 있다.
+
+```ts
+import {useReducer} from 'react'
+```
+```ts
+const [state, dispatch] = useReducer(reducer, initial_state)
+```
+
+### `redux`의 `reducer`와 `useReducer` 훅의 차이
+- 초기 샅태 값을 설정하는 부분에서 차이가 있다.
+```ts
+const initialState: AppState = {
+    today: new Date()
+}
+
+export const rootReducer = (state: AppState = initialState, action: AppActions) => {}
+```
+
+```ts
+useReducer((state: AppState, action: AppActions) => {}, {today: new Date()})
+```

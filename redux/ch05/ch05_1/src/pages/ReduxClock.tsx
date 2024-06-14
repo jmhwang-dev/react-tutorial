@@ -12,6 +12,7 @@ export default function ReduxClock() {
 
   return (
     <>
+        <p>ReducerClock</p>
         <div>{today.toLocaleTimeString()}</div>
         <div>{today.toLocaleDateString()}</div>
     </>
