@@ -65,3 +65,63 @@ export interface ConfigureStoreOptions<S, A, M> {
     enhancers?
 }
 ```
+
+## 2. `useSelector` 훅 사용하기
+- `useSelector`: `redux store`에 어떤 내용이 저장되었는지 알고자 `store` 상태값을 반환해주는 훅
+```tsx
+import {useSelector} from 'react-redux'
+```
+```tsx
+// 예시
+const today = useSelector<AppState, Date>(state => state.today);
+```
+
+### 1. 리덕스 액션 알아보기
+- `Action`: `redux store`의 특정 속성 값을 변경
+
+```ts
+export type SetTodayAction = Action<'setToday'> {
+    today: Date
+}
+
+export type Actions = SetTodayAction
+```
+
+### 2. 리덕스 리듀서 알아보기
+```ts
+import { AppState } from './AppState';
+import { Actions } from './actions';
+
+const initialState: AppState = {
+    today: new Date()
+};
+  
+export const rootReducer = (state: AppState = initialState, action: Actions) => {
+    // const newState = {...prevState};    // 깊은 복사 필요
+    // return newState;
+
+    switch (action.type) {
+        case 'setToday': {
+            return {...state, today: action.today}
+        }
+    }
+    return state;
+};
+```
+
+## 3. `useDispatch` 훅 사용하기
+- 리덕스 저장소에 저장된 `store` 객체의 멤버나 일부를 변경해주는 훅
+```ts
+import {useDispatch} from 'react-redux'
+```
+
+```ts
+const dispatch = useDispatch()
+dispatch({type: 'setToday', today: new Date()})
+```
+
+### `dispatch` 함수와 `reducer` 간의 관계 이애하기
+- `dispatch( Action )`->`reducer`-> `redux store`
+    - 앱 수준 상태의 일부 속성 값을 변경하려면 `Action`을 만들어야한다.
+    - `Action`은 반드시 `dispatch` 함수로 `reducer`에 전달해야한다.
+    - `reducer`에 전달되는 `state`, `action`을 통해 새로운 `state` 객체를 만들어 `redux store`에 저장한다.
